@@ -12,13 +12,13 @@ mixin _$TodosController on _TodosController, Store {
   final _$todosAtom = Atom(name: '_TodosController.todos');
 
   @override
-  List<TodoItem> get todos {
+  ObservableList<TodoItem> get todos {
     _$todosAtom.reportRead();
     return super.todos;
   }
 
   @override
-  set todos(List<TodoItem> value) {
+  set todos(ObservableList<TodoItem> value) {
     _$todosAtom.reportWrite(value, super.todos, () {
       super.todos = value;
     });
@@ -33,6 +33,17 @@ mixin _$TodosController on _TodosController, Store {
         name: '_TodosController.setTodos');
     try {
       return super.setTodos(items);
+    } finally {
+      _$_TodosControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void addTodo(TodoItem todo) {
+    final _$actionInfo = _$_TodosControllerActionController.startAction(
+        name: '_TodosController.addTodo');
+    try {
+      return super.addTodo(todo);
     } finally {
       _$_TodosControllerActionController.endAction(_$actionInfo);
     }

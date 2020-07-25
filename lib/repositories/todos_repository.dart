@@ -8,10 +8,14 @@ class TodosRepository {
   static final String todosUrl = "${AppUrls.baseUrl}/todos.json";
   static Dio dio = Dio();
 
-  static Future<void> saveTodo(TodoItem todo) async {
-    final response = await dio.post(todosUrl, data: json.encode(todo.toJson()));
+  static Future<TodoItem> saveTodo(TodoItem todo) async {
+    final response = await dio.post<Map<String, dynamic>>(todosUrl,
+        data: json.encode(todo.toJson()));
+    // print(response.data);
+    TodoItem savedTodo = todo;
+    savedTodo.id = response.data['name'];
 
-    print(response);
+    return savedTodo;
   }
 
   static Future<List<TodoItem>> fetchTodos() async {

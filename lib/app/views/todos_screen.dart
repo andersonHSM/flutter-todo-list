@@ -39,16 +39,6 @@ class _TodosScreenState extends State<TodosScreen> {
 
   // TODO - não manter hardcoded
   List<TodoItem> _todosItems;
-  /*  = [
-    TodoItem(
-      id: uuid.v4(),
-      title: 'Construir base aplicação',
-    ),
-    TodoItem(
-        id: uuid.v4(),
-        title: 'Permitir card atualizável',
-        description: 'Permitir que ao clicar como finalzado, o card atualize')
-  ]; */
 
   // TODO - refatorar para outro widget
   List<PopupMenuItem<String>> _buildPopupMenuItems(
@@ -101,14 +91,16 @@ class _TodosScreenState extends State<TodosScreen> {
       ),
       body: Observer(
         builder: (context) {
-          print(todosController.todos);
           if (todosController.todos.length == 0) {
             return Center(
               child: (Text('No ToDos found.')),
             );
           }
-          return TodosListWidget(
-            items: todosController.todos,
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 75),
+            child: TodosListWidget(
+              items: todosController.todos,
+            ),
           );
         },
       ),

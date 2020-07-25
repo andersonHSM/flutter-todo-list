@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/todo_item.dart';
 import 'package:todo/repositories/todos_repository.dart';
 
@@ -8,12 +10,19 @@ class TodoFormWidget extends StatefulWidget {
 }
 
 class _TodoFormWidgetState extends State<TodoFormWidget> {
+  TodosController todosController;
   bool sendingRequest = false;
   final _form = GlobalKey<FormState>();
 
   TodoItem todo;
 
   final Map<String, dynamic> _formData = {};
+
+  @override
+  void initState() {
+    super.initState();
+    todosController = Provider.of<TodosController>(context, listen: false);
+  }
 
   Future<void> _saveTodo() async {
     final formState = _form.currentState;
@@ -37,7 +46,9 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
     });
 
     try {
-      await TodosRepository.saveTodo(todo);
+      final response = await TodosRepository.saveTodo(todo);
+
+      todosController.addTodo(response);
 
       Navigator.of(context).pop();
     } catch (e) {} finally {

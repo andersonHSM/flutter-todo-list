@@ -8,10 +8,15 @@ class TodosController = _TodosController with _$TodosController;
 
 abstract class _TodosController with Store {
   @observable
-  List<TodoItem> todos = [];
+  ObservableList<TodoItem> todos = ObservableList.of([]);
 
   @action
   void setTodos(List<TodoItem> items) {
-    todos = items;
+    todos.addAll(items);
+  }
+
+  @action
+  void addTodo(TodoItem todo) {
+    todos.add(todo);
   }
 }
