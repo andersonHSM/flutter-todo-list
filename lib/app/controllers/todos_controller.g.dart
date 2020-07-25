@@ -79,6 +79,17 @@ mixin _$TodosController on _TodosController, Store {
   }
 
   @override
+  void updateTodo(TodoItem todo) {
+    final _$actionInfo = _$_TodosControllerActionController.startAction(
+        name: '_TodosController.updateTodo');
+    try {
+      return super.updateTodo(todo);
+    } finally {
+      _$_TodosControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 todos: ${todos},

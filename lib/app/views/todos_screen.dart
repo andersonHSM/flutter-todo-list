@@ -115,7 +115,7 @@ class _TodosScreenState extends State<TodosScreen> {
         child: Observer(
           builder: (context) {
             ObservableList<TodoItem> todos = _selectTodosToShow(_popupValue);
-
+            print(todos);
             if (todos.length == 0) {
               return Center(
                 child: (Text('No ToDos found.')),

@@ -37,8 +37,10 @@ abstract class _TodosController with Store {
     todos.add(todo);
   }
 
-  // @action
-  // void updateTodo(TodoItem todo) {
-  //   int index = todos.indexOf(todo);
-  // }
+  @action
+  void updateTodo(TodoItem todo) {
+    int index = todos.indexOf(todo);
+
+    todos[index] = todo;
+  }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/todo_item.dart';
 
 class TodoItemWidget extends StatelessWidget {
@@ -54,11 +56,19 @@ class TodoItemWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: CheckboxListTile(
-              title: Text(item.title),
+              title: Text(
+                item.title,
+                style: TextStyle(
+                    decoration: item.finished
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none),
+              ),
               subtitle: Text(item.description),
               value: item.finished,
               onChanged: (_) {
                 item.toggleFinishedState();
+                Provider.of<TodosController>(context, listen: false)
+                    .updateTodo(item);
               }),
         ),
       ),
