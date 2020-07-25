@@ -5,11 +5,11 @@ import 'package:todo/app/models/todo_item.dart';
 import 'package:todo/utils/app_urls.dart';
 
 class TodosRepository {
-  static final String todosUrl = "${AppUrls.baseUrl}/todos.json";
+  static final String todosUrl = "${AppUrls.baseUrl}/todos";
   static Dio dio = Dio();
 
   static Future<TodoItem> saveTodo(TodoItem todo) async {
-    final response = await dio.post<Map<String, dynamic>>(todosUrl,
+    final response = await dio.post<Map<String, dynamic>>("$todosUrl.json",
         data: json.encode(todo.toJson()));
     // print(response.data);
     TodoItem savedTodo = todo;
@@ -19,7 +19,7 @@ class TodosRepository {
   }
 
   static Future<List<TodoItem>> fetchTodos() async {
-    final Response<Map<String, dynamic>> response = await dio.get(todosUrl);
+    final response = await dio.get<Map<String, dynamic>>("$todosUrl.json");
 
     List<TodoItem> items = [];
     response.data.forEach((key, value) {
@@ -29,5 +29,12 @@ class TodosRepository {
     });
 
     return items;
+  }
+
+  static Future<TodoItem> updateTodo(TodoItem todo) async {
+    final response = await dio.put("$todosUrl/${todo.id}.json",
+        data: json.encode(todo.toJson()));
+
+    print(response);
   }
 }

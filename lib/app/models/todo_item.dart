@@ -5,7 +5,7 @@ class TodoItem with ChangeNotifier {
   final String title;
   final String description;
   final DateTime createdAt;
-  final DateTime updatedAt;
+  DateTime updatedAt;
   bool filed;
   bool finished;
 
@@ -39,7 +39,6 @@ class TodoItem with ChangeNotifier {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'title': title,
       'description': description,
       'filed': filed,

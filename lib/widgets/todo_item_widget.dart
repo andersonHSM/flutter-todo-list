@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/todo_item.dart';
+import 'package:todo/repositories/todos_repository.dart';
 
 class TodoItemWidget extends StatelessWidget {
   final TodoItem item;
@@ -65,10 +66,20 @@ class TodoItemWidget extends StatelessWidget {
               ),
               subtitle: Text(item.description),
               value: item.finished,
-              onChanged: (_) {
-                item.toggleFinishedState();
-                Provider.of<TodosController>(context, listen: false)
-                    .updateTodo(item);
+              onChanged: (_) async {
+                try {
+                  item.updatedAt = DateTime.now();
+
+                  item.toggleFinishedState();
+
+                  await TodosRepository.updateTodo(item);
+
+                  Provider.of<TodosController>(context, listen: false)
+                      .updateTodo(item);
+                } catch (e) {
+                  print(e);
+                  item.toggleFinishedState();
+                }
               }),
         ),
       ),
