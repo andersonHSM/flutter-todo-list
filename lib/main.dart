@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/views/todos_screen.dart';
 import 'package:todo/utils/app_routes.dart';
 
@@ -9,63 +11,19 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'CoBlue ToDo List',
-      theme: ThemeData(
-        primaryColor: Colors.blueGrey[900],
-        accentColor: Colors.deepPurple[700],
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      // home: MyHomePage(title: 'ToDo List'),
-      routes: {
-        AppRoutes.HOME: (_) => TodosScreen(),
-      },
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            )
-          ],
+    return Provider(
+      create: (context) => TodosController(),
+      child: MaterialApp(
+        title: 'CoBlue ToDo List',
+        theme: ThemeData(
+          primaryColor: Colors.blueGrey[900],
+          accentColor: Colors.deepPurple[700],
+          visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+        // home: MyHomePage(title: 'ToDo List'),
+        routes: {
+          AppRoutes.HOME: (_) => TodosScreen(),
+        },
       ),
     );
   }

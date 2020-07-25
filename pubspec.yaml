@@ -24,6 +24,7 @@ dependencies:
   provider: ^4.3.1
   mobx: ^1.2.1+1 
   flutter_mobx: ^1.0.0
+  dio: ^3.0.9
   # TODO - remover
   uuid: ^2.2.0
   flutter:

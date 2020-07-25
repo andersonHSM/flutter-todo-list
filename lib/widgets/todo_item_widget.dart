@@ -5,6 +5,7 @@ class TodoItemWidget extends StatelessWidget {
   final TodoItem item;
 
   TodoItemWidget({this.item});
+
   @override
   Widget build(BuildContext context) {
     return Dismissible(
@@ -21,7 +22,7 @@ class TodoItemWidget extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: CheckboxListTile(
               title: Text(item.title),
-              subtitle: Text(item.description ?? ''),
+              subtitle: Text(item.description),
               value: item.finished,
               onChanged: (_) {
                 item.toggleFinishedState();

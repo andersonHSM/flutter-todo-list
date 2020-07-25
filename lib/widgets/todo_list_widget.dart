@@ -18,7 +18,8 @@ class TodosListWidget extends StatelessWidget {
             value: item,
             child: Consumer<TodoItem>(
               builder: (context, value, child) {
-                return TodoItemWidget(item: item);
+                print(value);
+                return TodoItemWidget(item: value);
               },
             ));
       },
