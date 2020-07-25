@@ -5,9 +5,9 @@ import 'package:todo/widgets/todo_item_widget.dart';
 
 class TodosListWidget extends StatelessWidget {
   final List<TodoItem> items;
+  final Function confirmDismiss;
 
-  TodosListWidget({@required this.items});
-
+  TodosListWidget({@required this.items, @required this.confirmDismiss});
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -18,7 +18,10 @@ class TodosListWidget extends StatelessWidget {
             value: item,
             child: Consumer<TodoItem>(
               builder: (context, value, child) {
-                return TodoItemWidget(item: value);
+                return TodoItemWidget(
+                  item: value,
+                  confirmDismiss: (item) => items.remove(item),
+                );
               },
             ));
       },

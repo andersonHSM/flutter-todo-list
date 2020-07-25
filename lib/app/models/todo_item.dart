@@ -27,8 +27,8 @@ class TodoItem with ChangeNotifier {
         createdAt = DateTime.parse(json['createdAt']),
         updatedAt = DateTime.parse(json['updatedAt']);
 
-  void toggleFiledState() {
-    this.filed = !this.filed;
+  void updateFiledState(bool isFiled) {
+    this.filed = isFiled;
     notifyListeners();
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/todo_item.dart';
@@ -23,7 +24,9 @@ class TodosScreen extends StatefulWidget {
 
 class _TodosScreenState extends State<TodosScreen> {
   TodosController todosController;
-  static Uuid uuid = Uuid();
+
+  String _popupValue = 'all';
+
   final List<PopupItem> _popupItems = [
     PopupItem(
       icon: Icons.list,
@@ -35,10 +38,12 @@ class _TodosScreenState extends State<TodosScreen> {
       text: 'Arquivados',
       value: 'filed',
     ),
+    PopupItem(
+      icon: Icons.save,
+      text: 'Finalizados',
+      value: 'finished',
+    ),
   ];
-
-  // TODO - não manter hardcoded
-  List<TodoItem> _todosItems;
 
   // TODO - refatorar para outro widget
   List<PopupMenuItem<String>> _buildPopupMenuItems(
@@ -59,17 +64,31 @@ class _TodosScreenState extends State<TodosScreen> {
     }).toList();
   }
 
-  String dropdownValue = 'One';
-
   @override
   void initState() {
     super.initState();
     this.todosController = Provider.of<TodosController>(context, listen: false);
-    _todosItems = todosController.todos;
 
-    TodosRepository.fetchTodos().then((value) {
-      todosController.setTodos(value);
-    });
+    _fetchTodos();
+  }
+
+  Future<void> _fetchTodos() async {
+    final todos = await TodosRepository.fetchTodos();
+
+    todosController.setTodos(todos);
+  }
+
+  ObservableList<TodoItem> _selectTodosToShow(String value) {
+    switch (value) {
+      case 'all':
+        return todosController.unfiledTodos;
+      case 'filed':
+        return todosController.filedTodos;
+      case 'finished':
+        return todosController.finishedTodos;
+      default:
+        return todosController.todos;
+    }
   }
 
   @override
@@ -84,25 +103,33 @@ class _TodosScreenState extends State<TodosScreen> {
             },
             icon: Icon(Icons.filter_list),
             onSelected: (value) {
-              print(value);
+              setState(() {
+                _popupValue = value;
+              });
             },
           ),
         ],
       ),
-      body: Observer(
-        builder: (context) {
-          if (todosController.todos.length == 0) {
-            return Center(
-              child: (Text('No ToDos found.')),
+      body: RefreshIndicator(
+        onRefresh: _fetchTodos,
+        child: Observer(
+          builder: (context) {
+            ObservableList<TodoItem> todos = _selectTodosToShow(_popupValue);
+
+            if (todos.length == 0) {
+              return Center(
+                child: (Text('No ToDos found.')),
+              );
+            }
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 75),
+              child: TodosListWidget(
+                items: todos,
+                confirmDismiss: () => setState(() {}),
+              ),
             );
-          }
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 75),
-            child: TodosListWidget(
-              items: todosController.todos,
-            ),
-          );
-        },
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {

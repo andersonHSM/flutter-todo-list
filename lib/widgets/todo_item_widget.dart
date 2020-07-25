@@ -3,18 +3,51 @@ import 'package:todo/app/models/todo_item.dart';
 
 class TodoItemWidget extends StatelessWidget {
   final TodoItem item;
+  final Function confirmDismiss;
 
-  TodoItemWidget({this.item});
+  TodoItemWidget({this.item, this.confirmDismiss});
 
   @override
   Widget build(BuildContext context) {
     return Dismissible(
       onDismissed: (direction) {
-        return null;
+        confirmDismiss(item);
       },
-      confirmDismiss: (_) {
-        // TODO - implementar lógica de arquivamento
-        return Future.value(false);
+      confirmDismiss: (direction) async {
+        switch (direction) {
+          case DismissDirection.endToStart:
+            bool updatedValue = await showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(
+                      "Do you wish to ${!item.filed ? 'file' : 'unfile'} this ToDo?"),
+                  actions: <Widget>[
+                    RaisedButton(
+                      child: Text('Confirm'),
+                      onPressed: () {
+                        bool file = true;
+                        if (item.filed) {
+                          file = false;
+                        }
+                        item.updateFiledState(file);
+                        Navigator.of(context).pop(true);
+                      },
+                    )
+                  ],
+                );
+              },
+            );
+
+            if (updatedValue == null) {
+              return updatedValue = false;
+            }
+
+            return updatedValue;
+
+          default:
+            return Future.value(false);
+        }
       },
       key: Key(item.id),
       child: Card(
