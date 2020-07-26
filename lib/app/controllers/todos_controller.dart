@@ -35,8 +35,12 @@ abstract class _TodosController with Store {
   }
 
   @action
-  void addTodo(TodoItem todo) {
-    todos.add(todo);
+  void addTodo(TodoItem todo, [int index]) {
+    if (index != null) {
+      todos.insert(index, todo);
+    } else {
+      todos.add(todo);
+    }
   }
 
   @action
@@ -44,5 +48,10 @@ abstract class _TodosController with Store {
     int index = todos.indexOf(todo);
 
     todos[index] = todo;
+  }
+
+  @action
+  void removeTodo(TodoItem todo) {
+    todos.remove(todo);
   }
 }

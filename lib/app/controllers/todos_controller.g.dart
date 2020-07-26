@@ -68,11 +68,11 @@ mixin _$TodosController on _TodosController, Store {
   }
 
   @override
-  void addTodo(TodoItem todo) {
+  void addTodo(TodoItem todo, [int index]) {
     final _$actionInfo = _$_TodosControllerActionController.startAction(
         name: '_TodosController.addTodo');
     try {
-      return super.addTodo(todo);
+      return super.addTodo(todo, index);
     } finally {
       _$_TodosControllerActionController.endAction(_$actionInfo);
     }
@@ -84,6 +84,17 @@ mixin _$TodosController on _TodosController, Store {
         name: '_TodosController.updateTodo');
     try {
       return super.updateTodo(todo);
+    } finally {
+      _$_TodosControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeTodo(TodoItem todo) {
+    final _$actionInfo = _$_TodosControllerActionController.startAction(
+        name: '_TodosController.removeTodo');
+    try {
+      return super.removeTodo(todo);
     } finally {
       _$_TodosControllerActionController.endAction(_$actionInfo);
     }

@@ -35,4 +35,8 @@ class TodosRepository {
     await dio.put("$todosUrl/${todo.id}.json",
         data: json.encode(todo.toJson()));
   }
+
+  static Future<void> deleteTodo(TodoItem todo) async {
+    await dio.delete("$todosUrl/${todo.id}.json");
+  }
 }
