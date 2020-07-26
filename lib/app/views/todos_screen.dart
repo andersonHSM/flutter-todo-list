@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:todo/app/controllers/tags_controller.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/todo_item.dart';
+import 'package:todo/repositories/tags_repository.dart';
 import 'package:todo/repositories/todos_repository.dart';
 import 'package:todo/widgets/tag/tag_form_widget.dart';
 import 'package:todo/widgets/todo/todo_form_widget.dart';
@@ -24,6 +26,7 @@ class TodosScreen extends StatefulWidget {
 
 class _TodosScreenState extends State<TodosScreen> {
   TodosController todosController;
+  TagsController tagsController;
 
   String _popupValue = 'all';
 
@@ -62,14 +65,25 @@ class _TodosScreenState extends State<TodosScreen> {
   void initState() {
     super.initState();
     this.todosController = Provider.of<TodosController>(context, listen: false);
+    this.tagsController = Provider.of<TagsController>(context, listen: false);
 
-    _fetchTodos();
+    _loadData();
   }
 
   Future<void> _fetchTodos() async {
     final todos = await TodosRepository.fetchTodos();
 
     todosController.setTodos(todos);
+  }
+
+  Future<void> _fetchTags() async {
+    final tags = await TagsRepository().fetchTags();
+
+    tagsController.setTags(tags);
+  }
+
+  Future<void> _loadData() async {
+    await Future.wait([_fetchTags(), _fetchTodos()]);
   }
 
   ObservableList<TodoItem> _selectTodosToShow(String value) {
@@ -132,11 +146,11 @@ class _TodosScreenState extends State<TodosScreen> {
                 children: <Widget>[
                   TodosListWidget(
                     items: todaysTodos,
-                    fetchTodos: _fetchTodos,
+                    refreshData: _loadData,
                   ),
                   TodosListWidget(
                     items: todos,
-                    fetchTodos: _fetchTodos,
+                    refreshData: _loadData,
                   )
                 ],
               ),

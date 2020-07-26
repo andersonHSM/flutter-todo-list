@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/todo_item.dart';
@@ -6,11 +8,11 @@ import 'package:todo/widgets/todo/todo_item_widget.dart';
 
 class TodosListWidget extends StatelessWidget {
   final List<TodoItem> items;
-  final Function fetchTodos;
+  final Function refreshData;
 
   TodosListWidget({
     @required this.items,
-    @required this.fetchTodos,
+    @required this.refreshData,
   });
 
   @override
@@ -22,7 +24,7 @@ class TodosListWidget extends StatelessWidget {
     );
 
     return RefreshIndicator(
-      onRefresh: fetchTodos,
+      onRefresh: refreshData,
       child: items.length == 0
           ? Stack(
               children: <Widget>[ListView(), emptyTodosMessage],
@@ -30,20 +32,20 @@ class TodosListWidget extends StatelessWidget {
           : ListView.builder(
               itemCount: items.length,
               itemBuilder: (context, index) {
-                TodoItem item = items.elementAt(index);
-                return Provider.value(
-                  value: item,
-                  child: Consumer<TodoItem>(
-                    builder: (_, value, child) {
-                      return TodoItemWidget(
-                        item: value,
-                        updateTodo: (todo) {
-                          todosController.updateTodo(todo, index);
-                        },
-                      );
+                return Observer(builder: (context) {
+                  TodoItem item =
+                      this.items.asObservable().toList().elementAt(index);
+
+                  int previousIndex = todosController.todos.indexOf(item);
+
+                  // TODO - alterar a lógica de filtragem para dentro desse widget
+                  return TodoItemWidget(
+                    item: item,
+                    updateTodo: (todo) {
+                      todosController.updateTodo(todo, previousIndex);
                     },
-                  ),
-                );
+                  );
+                });
               },
             ),
     );

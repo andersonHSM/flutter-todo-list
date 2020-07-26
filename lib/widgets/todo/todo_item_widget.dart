@@ -6,6 +6,7 @@ import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/todo_item.dart';
 import 'package:todo/repositories/todos_repository.dart';
 import 'package:todo/widgets/todo/todo_form_widget.dart';
+import 'package:todo/widgets/todo/todo_item_actions.dart';
 
 class TodoItemWidget extends StatelessWidget {
   final TodoItem item;
@@ -15,6 +16,74 @@ class TodoItemWidget extends StatelessWidget {
     @required this.item,
     @required this.updateTodo,
   });
+
+  Future<bool> _confirmDismiss(
+      BuildContext context, DismissDirection direction) async {
+    switch (direction) {
+      case DismissDirection.endToStart:
+        bool updatedValue = await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("${!item.filed ? 'File' : 'Unfile'} ToDo?"),
+              actions: <Widget>[
+                RaisedButton(
+                  color: Theme.of(context).accentColor,
+                  child: Text('Confirm'),
+                  onPressed: () async {
+                    Navigator.of(context).pop(true);
+                  },
+                )
+              ],
+            );
+          },
+        );
+
+        if (updatedValue == null) {
+          return false;
+        }
+        return updatedValue;
+
+      default:
+        return Future.value(false);
+    }
+  }
+
+  Future<void> _dismissItem(TodoItem todo) async {
+    try {
+      todo.toggleFiledState();
+
+      await TodosRepository.updateTodo(todo);
+    } catch (e) {
+      todo.toggleFiledState();
+    }
+  }
+
+  Future<void> _markAsFinished(TodoItem todo) async {
+    try {
+      todo.updatedAt = DateTime.now();
+
+      todo.toggleFinishedState();
+
+      updateTodo(todo);
+
+      await TodosRepository.updateTodo(todo);
+    } catch (e) {
+      todo.toggleFinishedState();
+    }
+  }
+
+  void _showEditModal(BuildContext context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return TodoFormWidget(
+          todo: this.item,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,45 +108,12 @@ class TodoItemWidget extends StatelessWidget {
         ),
         direction: DismissDirection.endToStart,
         onDismissed: (_) async {
-          try {
-            item.toggleFiledState();
-
-            await TodosRepository.updateTodo(item);
-          } catch (e) {
-            item.toggleFiledState();
-          }
+          await _dismissItem(item);
         },
         confirmDismiss: (direction) async {
-          switch (direction) {
-            case DismissDirection.endToStart:
-              bool updatedValue = await showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text("${!item.filed ? 'File' : 'Unfile'} ToDo?"),
-                    actions: <Widget>[
-                      RaisedButton(
-                        color: Theme.of(context).accentColor,
-                        child: Text('Confirm'),
-                        onPressed: () async {
-                          Navigator.of(context).pop(true);
-                        },
-                      )
-                    ],
-                  );
-                },
-              );
-
-              if (updatedValue == null) {
-                return false;
-              }
-              return updatedValue;
-
-            default:
-              return Future.value(false);
-          }
+          return await _confirmDismiss(context, direction);
         },
-        key: Key(item.id),
+        key: Key(this.item.id),
         child: Container(
           margin: const EdgeInsets.all(8.0),
           child: Card(
@@ -85,87 +121,25 @@ class TodoItemWidget extends StatelessWidget {
               children: <Widget>[
                 CheckboxListTile(
                   title: Text(
-                    item.title,
+                    this.item.title,
                     style: TextStyle(
-                        decoration: item.finished
+                        decoration: this.item.finished
                             ? TextDecoration.lineThrough
                             : TextDecoration.none),
                   ),
-                  subtitle: Text(item.description),
+                  subtitle: Text(this.item.description),
                   value: item.finished,
                   onChanged: (_) async {
-                    try {
-                      item.updatedAt = DateTime.now();
-
-                      item.toggleFinishedState();
-                      print(item);
-                      updateTodo(item);
-
-                      await TodosRepository.updateTodo(item);
-                    } catch (e) {
-                      item.toggleFinishedState();
-                    }
+                    await _markAsFinished(this.item);
                   },
                 ),
                 Divider(),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      Tooltip(
-                        message: 'Remove ToDo',
-                        child: IconButton(
-                          icon: Icon(Icons.delete,
-                              color: Theme.of(context).errorColor),
-                          onPressed: () async {
-                            int todoIndex = todosController.todos.indexOf(item);
-
-                            final confirmation = await showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                      title: Text('Delete ToDo?'),
-                                      actions: <Widget>[
-                                        RaisedButton(
-                                          color: Theme.of(context).accentColor,
-                                          child: Text('Confirm'),
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(true),
-                                        )
-                                      ],
-                                    ));
-                            if (confirmation != null && confirmation == true) {
-                              try {
-                                todosController.removeTodo(item);
-                                await TodosRepository.deleteTodo(item);
-                              } catch (e) {
-                                todosController.addTodo(item, todoIndex);
-                              }
-                            }
-                          },
-                        ),
-                      ),
-                      Tooltip(
-                        message: 'Edit ToDo',
-                        child: IconButton(
-                          color: Theme.of(context).accentColor,
-                          icon: Icon(
-                            Icons.edit,
-                          ),
-                          onPressed: () {
-                            showModalBottomSheet(
-                              isScrollControlled: true,
-                              context: context,
-                              builder: (context) {
-                                return TodoFormWidget(
-                                  todo: item,
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      )
-                    ],
+                  child: TodoItemActions(
+                    todoItem: this.item,
+                    todosController: todosController,
+                    showEditDialog: () => _showEditModal(context),
                   ),
                 ),
                 SizedBox(

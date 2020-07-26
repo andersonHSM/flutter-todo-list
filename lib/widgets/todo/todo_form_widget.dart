@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo/app/controllers/tags_controller.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/todo_item.dart';
+import 'package:todo/repositories/tags_repository.dart';
 import 'package:todo/repositories/todos_repository.dart';
 import 'package:todo/widgets/shared/form_actions.dart';
 import 'package:todo/widgets/tag/tag_choose_list.dart';
@@ -33,17 +34,23 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
     super.initState();
     todosController = Provider.of<TodosController>(context, listen: false);
     tagsController = Provider.of<TagsController>(context, listen: false);
+
     _initForm();
   }
 
-  void _initForm() {
+  Future<void> _initForm() async {
     _formData['title'] = widget.todo?.title;
     _formData['description'] = widget.todo?.description;
     _formData['tagId'] = widget.todo?.tagId;
 
     if (widget.todo?.tagId != null) {
-      _tagIndex =
-          tagsController.tags.indexWhere((tag) => tag.id == widget.todo.tagId);
+      _tagIndex = tagsController.tags.toList().indexWhere((tag) {
+        return tag.id == widget.todo.tagId;
+      });
+    }
+
+    if (_tagIndex == -1) {
+      _tagIndex = 0;
     }
   }
 
