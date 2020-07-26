@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:todo/app/controllers/tags_controller.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/todo_item.dart';
-import 'package:todo/repositories/tags_repository.dart';
 import 'package:todo/repositories/todos_repository.dart';
 import 'package:todo/widgets/shared/form_actions.dart';
 import 'package:todo/widgets/tag/tag_choose_list.dart';
