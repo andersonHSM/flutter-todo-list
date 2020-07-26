@@ -102,11 +102,11 @@ mixin _$TodoItem on _TodoItem, Store {
   final _$_TodoItemActionController = ActionController(name: '_TodoItem');
 
   @override
-  void updateFiledState(bool isFiled) {
+  void toggleFiledState() {
     final _$actionInfo = _$_TodoItemActionController.startAction(
-        name: '_TodoItem.updateFiledState');
+        name: '_TodoItem.toggleFiledState');
     try {
-      return super.updateFiledState(isFiled);
+      return super.toggleFiledState();
     } finally {
       _$_TodoItemActionController.endAction(_$actionInfo);
     }

@@ -118,7 +118,6 @@ class _TodosScreenState extends State<TodosScreen> {
               padding: const EdgeInsets.only(bottom: 75),
               child: TodosListWidget(
                 items: todos,
-                confirmDismiss: () => setState(() {}),
               ),
             );
           },

@@ -39,8 +39,8 @@ abstract class _TodoItem with Store {
         updatedAt = DateTime.parse(json['updatedAt']);
 
   @action
-  void updateFiledState(bool isFiled) {
-    this.filed = isFiled;
+  void toggleFiledState() {
+    this.filed = !this.filed;
   }
 
   @action

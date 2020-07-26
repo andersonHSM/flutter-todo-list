@@ -5,6 +5,10 @@ import 'package:todo/app/models/todo_item.dart';
 import 'package:todo/repositories/todos_repository.dart';
 
 class TodoFormWidget extends StatefulWidget {
+  final TodoItem todo;
+
+  TodoFormWidget({this.todo});
+
   @override
   _TodoFormWidgetState createState() => _TodoFormWidgetState();
 }
@@ -13,8 +17,7 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
   TodosController todosController;
   bool sendingRequest = false;
   final _form = GlobalKey<FormState>();
-
-  TodoItem todo;
+  final _descriptionFocusNode = FocusNode();
 
   final Map<String, dynamic> _formData = {};
 
@@ -22,6 +25,8 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
   void initState() {
     super.initState();
     todosController = Provider.of<TodosController>(context, listen: false);
+    _formData['title'] = widget.todo?.title;
+    _formData['description'] = widget.todo?.description;
   }
 
   Future<void> _saveTodo() async {
@@ -34,21 +39,34 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
 
     final saveTime = DateTime.now();
 
-    final todo = TodoItem(
-      title: _formData['title'],
-      description: _formData['description'],
-      createdAt: saveTime,
-      updatedAt: saveTime,
-    );
-
     setState(() {
       sendingRequest = true;
     });
 
     try {
-      final response = await TodosRepository.saveTodo(todo);
+      TodoItem todo;
+      TodoItem todoResponse;
 
-      todosController.addTodo(response);
+      if (widget.todo == null) {
+        todo = TodoItem(
+          title: _formData['title'],
+          description: _formData['description'],
+          createdAt: saveTime,
+          updatedAt: saveTime,
+        );
+        todoResponse = await TodosRepository.saveTodo(todo);
+        todosController.addTodo(todoResponse);
+      } else {
+        todo = widget.todo;
+
+        todo.updatedAt = saveTime;
+        todo.title = _formData['title'];
+        todo.description = _formData['description'];
+
+        await TodosRepository.updateTodo(todo);
+
+        todosController.updateTodo(todo);
+      }
 
       Navigator.of(context).pop();
     } catch (e) {} finally {
@@ -70,6 +88,8 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 TextFormField(
+                  onEditingComplete: () => _descriptionFocusNode.requestFocus(),
+                  initialValue: widget.todo?.title ?? '',
                   onSaved: (value) => _formData['title'] = value,
                   decoration: InputDecoration(
                     labelText: 'Title',
@@ -83,6 +103,11 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
                   },
                 ),
                 TextFormField(
+                  focusNode: _descriptionFocusNode,
+                  onFieldSubmitted: (value) {
+                    _saveTodo();
+                  },
+                  initialValue: widget.todo?.description ?? '',
                   onSaved: (value) => _formData['description'] = value,
                   decoration: InputDecoration(
                     labelText: 'Description',
