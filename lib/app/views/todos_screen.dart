@@ -39,7 +39,6 @@ class _TodosScreenState extends State<TodosScreen> {
     ),
   ];
 
-  // TODO - refatorar para outro widget
   List<PopupMenuItem<String>> _buildPopupMenuItems(
       BuildContext context, List<PopupItem> list) {
     return list.map((item) {
@@ -85,34 +84,62 @@ class _TodosScreenState extends State<TodosScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: GlobalKey(),
-      appBar: AppBar(
-        title: Text('ToDo List'),
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            itemBuilder: (context) {
-              return _buildPopupMenuItems(context, _popupItems);
-            },
-            icon: Icon(Icons.filter_list),
-            onSelected: (value) {
-              setState(() {
-                _popupValue = value;
-              });
-            },
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        key: GlobalKey(),
+        appBar: AppBar(
+          title: Text('ToDo List'),
+          bottom: TabBar(
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorWeight: 6,
+            tabs: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("Today's"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("All"),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: _fetchTodos,
-        child: Observer(
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              itemBuilder: (context) {
+                return _buildPopupMenuItems(context, _popupItems);
+              },
+              icon: Icon(Icons.filter_list),
+              onSelected: (value) {
+                setState(() {
+                  _popupValue = value;
+                });
+              },
+            ),
+          ],
+        ),
+        body: Observer(
           builder: (context) {
             List<TodoItem> todos = _selectTodosToShow(_popupValue).toList();
-            if (todos.length == 0) {
-              return Center(
-                child: (Text('No ToDos found.')),
-              );
-            }
+            List<TodoItem> todaysTodos = todos
+                .where((element) => element.createdAt.day == DateTime.now().day)
+                .toList();
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 80),
+              child: TabBarView(
+                children: <Widget>[
+                  TodosListWidget(
+                    items: todaysTodos,
+                    fetchTodos: _fetchTodos,
+                  ),
+                  TodosListWidget(
+                    items: todos,
+                    fetchTodos: _fetchTodos,
+                  )
+                ],
+              ),
+            );
 
             return Padding(
               padding: const EdgeInsets.only(bottom: 75),
@@ -122,18 +149,18 @@ class _TodosScreenState extends State<TodosScreen> {
             );
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await showModalBottomSheet(
-            isScrollControlled: true,
-            context: context,
-            builder: (context) {
-              return TodoFormWidget();
-            },
-          );
-        },
-        child: Icon(Icons.add),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            await showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (context) {
+                return TodoFormWidget();
+              },
+            );
+          },
+          child: Icon(Icons.add),
+        ),
       ),
     );
   }
