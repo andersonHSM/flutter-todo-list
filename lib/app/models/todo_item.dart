@@ -39,7 +39,8 @@ abstract class _TodoItem with Store {
         finished = json['finished'],
         filed = json['filed'],
         createdAt = DateTime.parse(json['createdAt']),
-        updatedAt = DateTime.parse(json['updatedAt']);
+        updatedAt = DateTime.parse(json['updatedAt']),
+        tagId = json['tagId'];
 
   @action
   void toggleFiledState() {
@@ -58,7 +59,8 @@ abstract class _TodoItem with Store {
       'filed': filed,
       'finished': finished,
       'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String()
+      'updatedAt': updatedAt.toIso8601String(),
+      'tagId': tagId,
     };
   }
 }

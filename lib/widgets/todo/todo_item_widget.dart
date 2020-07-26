@@ -10,10 +10,11 @@ import 'package:todo/widgets/todo/todo_form_widget.dart';
 class TodoItemWidget extends StatelessWidget {
   final TodoItem item;
   final Function(TodoItem) updateTodo;
-  final int index;
 
-  TodoItemWidget(
-      {@required this.item, @required this.updateTodo, @required this.index});
+  TodoItemWidget({
+    @required this.item,
+    @required this.updateTodo,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +159,6 @@ class TodoItemWidget extends StatelessWidget {
                               builder: (context) {
                                 return TodoFormWidget(
                                   todo: item,
-                                  index: index,
                                 );
                               },
                             );
