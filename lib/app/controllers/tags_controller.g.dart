@@ -24,6 +24,53 @@ mixin _$TagsController on _TagsController, Store {
     });
   }
 
+  final _$_TagsControllerActionController =
+      ActionController(name: '_TagsController');
+
+  @override
+  void setTags(List<Tag> tags) {
+    final _$actionInfo = _$_TagsControllerActionController.startAction(
+        name: '_TagsController.setTags');
+    try {
+      return super.setTags(tags);
+    } finally {
+      _$_TagsControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updateTag(Tag tag, int index) {
+    final _$actionInfo = _$_TagsControllerActionController.startAction(
+        name: '_TagsController.updateTag');
+    try {
+      return super.updateTag(tag, index);
+    } finally {
+      _$_TagsControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void addTag(Tag tag, [int index]) {
+    final _$actionInfo = _$_TagsControllerActionController.startAction(
+        name: '_TagsController.addTag');
+    try {
+      return super.addTag(tag, index);
+    } finally {
+      _$_TagsControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void deleteTag(Tag tag) {
+    final _$actionInfo = _$_TagsControllerActionController.startAction(
+        name: '_TagsController.deleteTag');
+    try {
+      return super.deleteTag(tag);
+    } finally {
+      _$_TagsControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

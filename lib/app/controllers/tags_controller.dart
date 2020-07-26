@@ -15,14 +15,21 @@ abstract class _TagsController with Store {
   }
 
   @action
-  void updateTag(Tag tag) {
-    int index = tags.indexOf(tag);
-
+  void updateTag(Tag tag, int index) {
     tags[index] = tag;
   }
 
   @action
-  void addTag(Tag tag) {
-    tags.add(tag);
+  void addTag(Tag tag, [int index]) {
+    if (index != null) {
+      tags.insert(index, tag);
+    } else {
+      tags.add(tag);
+    }
+  }
+
+  @action
+  void deleteTag(Tag tag) {
+    tags.remove(tag);
   }
 }

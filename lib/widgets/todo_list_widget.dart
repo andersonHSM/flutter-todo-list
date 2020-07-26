@@ -36,9 +36,10 @@ class TodosListWidget extends StatelessWidget {
                   child: Consumer<TodoItem>(
                     builder: (_, value, child) {
                       return TodoItemWidget(
+                        index: index,
                         item: value,
                         updateTodo: (todo) {
-                          todosController.updateTodo(todo);
+                          todosController.updateTodo(todo, index);
                         },
                       );
                     },

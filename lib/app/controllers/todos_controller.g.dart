@@ -79,11 +79,11 @@ mixin _$TodosController on _TodosController, Store {
   }
 
   @override
-  void updateTodo(TodoItem todo) {
+  void updateTodo(TodoItem todo, int index) {
     final _$actionInfo = _$_TodosControllerActionController.startAction(
         name: '_TodosController.updateTodo');
     try {
-      return super.updateTodo(todo);
+      return super.updateTodo(todo, index);
     } finally {
       _$_TodosControllerActionController.endAction(_$actionInfo);
     }

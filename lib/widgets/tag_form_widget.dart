@@ -7,8 +7,9 @@ import 'package:todo/repositories/tags_repository.dart';
 
 class TagFormWidget extends StatefulWidget {
   final Tag tag;
+  final int index;
 
-  TagFormWidget({this.tag});
+  TagFormWidget({this.tag, this.index});
 
   @override
   _TagFormWidgetState createState() => _TagFormWidgetState();
@@ -63,15 +64,21 @@ class _TagFormWidgetState extends State<TagFormWidget> {
         tagResponse = await tagsRepository.saveTag(tag);
         tagsController.addTag(tagResponse);
       } else {
-        tag = widget.tag;
+        Tag widgetTag = widget.tag;
+        tag = Tag(
+          title: widgetTag.title,
+          createdAt: widgetTag.createdAt,
+          description: widgetTag.description,
+          id: widgetTag.id,
+          updatedAt: widgetTag.updatedAt,
+        );
 
         tag.updatedAt = saveTime;
         tag.title = _formData['title'];
         tag.description = _formData['description'];
 
         await tagsRepository.updateTag(tag);
-
-        tagsController.updateTag(tag);
+        tagsController.updateTag(tag, widget.index);
       }
 
       Navigator.of(context).pop();

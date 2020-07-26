@@ -24,8 +24,8 @@ abstract class _Tag with Store {
   _Tag.fromJson(Map<String, dynamic> json)
       : description = json['description'],
         title = json['title'],
-        createdAt = json['createdAt'],
-        updatedAt = json['updatedAt'];
+        createdAt = DateTime.parse(json['createdAt']),
+        updatedAt = DateTime.parse(json['updatedAt']);
 
   Map<String, dynamic> toJson() {
     return {

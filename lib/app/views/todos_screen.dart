@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
@@ -9,8 +8,6 @@ import 'package:todo/repositories/todos_repository.dart';
 import 'package:todo/widgets/tag_form_widget.dart';
 import 'package:todo/widgets/todo_form_widget.dart';
 import 'package:todo/widgets/todo_list_widget.dart';
-
-enum FormsModals { TODO, TAG }
 
 class PopupItem {
   final IconData icon;
@@ -86,110 +83,67 @@ class _TodosScreenState extends State<TodosScreen> {
     }
   }
 
-  Future<void> _openFormDialog(FormsModals modal) async {
-    await showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      builder: (context) {
-        switch (modal) {
-          case FormsModals.TAG:
-            return TagFormWidget();
-          // case FormsModals.TODO:
-          //   return TodoFormWidget();
-          default:
-            return TodoFormWidget();
-        }
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-          key: GlobalKey(),
-          appBar: AppBar(
-            title: Text('ToDo List'),
-            bottom: TabBar(
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorWeight: 6,
-              tabs: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("Today's"),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text("All"),
-                ),
-              ],
-            ),
-            actions: <Widget>[
-              PopupMenuButton<String>(
-                itemBuilder: (context) {
-                  return _buildPopupMenuItems(context, _popupItems);
-                },
-                icon: Icon(Icons.filter_list),
-                onSelected: (value) {
-                  setState(() {
-                    _popupValue = value;
-                  });
-                },
+        key: GlobalKey(),
+        appBar: AppBar(
+          title: Text('ToDo List'),
+          bottom: TabBar(
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorWeight: 6,
+            tabs: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("Today's"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("All"),
               ),
             ],
           ),
-          body: Observer(
-            builder: (context) {
-              List<TodoItem> todos = _selectTodosToShow(_popupValue).toList();
-              List<TodoItem> todaysTodos = todos
-                  .where(
-                      (element) => element.createdAt.day == DateTime.now().day)
-                  .toList();
-
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 80),
-                child: TabBarView(
-                  children: <Widget>[
-                    TodosListWidget(
-                      items: todaysTodos,
-                      fetchTodos: _fetchTodos,
-                    ),
-                    TodosListWidget(
-                      items: todos,
-                      fetchTodos: _fetchTodos,
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-          floatingActionButton: SpeedDial(
-            child: Icon(Icons.add),
-            children: [
-              SpeedDialChild(
-                label: 'ToDo',
-                child: Icon(Icons.assignment),
-                onTap: () => _openFormDialog(FormsModals.TODO),
-              ),
-              SpeedDialChild(
-                  label: 'Tag',
-                  child: Icon(Icons.local_offer),
-                  onTap: () => _openFormDialog(FormsModals.TAG))
-            ],
-          ) /* FloatingActionButton(
-          onPressed: () async {
-            await showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              builder: (context) {
-                return TodoFormWidget();
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              itemBuilder: (context) {
+                return _buildPopupMenuItems(context, _popupItems);
               },
+              icon: Icon(Icons.filter_list),
+              onSelected: (value) {
+                setState(() {
+                  _popupValue = value;
+                });
+              },
+            ),
+          ],
+        ),
+        body: Observer(
+          builder: (context) {
+            List<TodoItem> todos = _selectTodosToShow(_popupValue).toList();
+            List<TodoItem> todaysTodos = todos
+                .where((element) => element.createdAt.day == DateTime.now().day)
+                .toList();
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 80),
+              child: TabBarView(
+                children: <Widget>[
+                  TodosListWidget(
+                    items: todaysTodos,
+                    fetchTodos: _fetchTodos,
+                  ),
+                  TodosListWidget(
+                    items: todos,
+                    fetchTodos: _fetchTodos,
+                  )
+                ],
+              ),
             );
           },
-          child: Icon(Icons.add),
-        ), */
-          ),
+        ),
+      ),
     );
   }
 }

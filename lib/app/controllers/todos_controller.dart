@@ -44,9 +44,7 @@ abstract class _TodosController with Store {
   }
 
   @action
-  void updateTodo(TodoItem todo) {
-    int index = todos.indexOf(todo);
-
+  void updateTodo(TodoItem todo, int index) {
     todos[index] = todo;
   }
 

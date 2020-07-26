@@ -6,8 +6,9 @@ import 'package:todo/repositories/todos_repository.dart';
 
 class TodoFormWidget extends StatefulWidget {
   final TodoItem todo;
+  final int index;
 
-  TodoFormWidget({this.todo});
+  TodoFormWidget({this.todo, this.index});
 
   @override
   _TodoFormWidgetState createState() => _TodoFormWidgetState();
@@ -57,19 +58,29 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
         todoResponse = await TodosRepository.saveTodo(todo);
         todosController.addTodo(todoResponse);
       } else {
-        todo = widget.todo;
+        final widgetTodo = widget.todo;
+        todo = TodoItem(
+          createdAt: widgetTodo.createdAt,
+          description: widgetTodo.description,
+          filed: widgetTodo.filed,
+          finished: widgetTodo.finished,
+          id: widgetTodo.id,
+          title: widgetTodo.title,
+          updatedAt: widgetTodo.updatedAt,
+        );
 
         todo.updatedAt = saveTime;
         todo.title = _formData['title'];
         todo.description = _formData['description'];
 
         await TodosRepository.updateTodo(todo);
-
-        todosController.updateTodo(todo);
+        todosController.updateTodo(todo, widget.index);
       }
 
       Navigator.of(context).pop();
-    } catch (e) {} finally {
+    } catch (e) {
+      print(e);
+    } finally {
       setState(() {
         sendingRequest = false;
       });
