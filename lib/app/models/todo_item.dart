@@ -19,6 +19,8 @@ abstract class _TodoItem with Store {
   bool filed;
   @observable
   bool finished;
+  @observable
+  String tagId;
 
   _TodoItem({
     @required this.title,
@@ -28,6 +30,7 @@ abstract class _TodoItem with Store {
     this.finished = false,
     this.createdAt,
     this.updatedAt,
+    this.tagId,
   });
 
   _TodoItem.fromJson(Map<String, dynamic> json)

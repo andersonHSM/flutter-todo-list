@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo/app/controllers/tags_controller.dart';
 import 'package:todo/app/models/tag.dart';
 import 'package:todo/repositories/tags_repository.dart';
+import 'package:todo/widgets/shared/form_actions.dart';
 
 class TagFormWidget extends StatefulWidget {
   final Tag tag;
@@ -130,40 +131,9 @@ class _TagFormWidgetState extends State<TagFormWidget> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    RaisedButton(
-                      color: Theme.of(context).errorColor,
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 5),
-                    RaisedButton(
-                      color: Theme.of(context).accentColor,
-                      onPressed: _saveTag,
-                      child: sendingRequest
-                          ? Container(
-                              width: 25,
-                              height: 25,
-                              child: CircularProgressIndicator(
-                                backgroundColor: Colors.white,
-                                strokeWidth: 3,
-                              ),
-                            )
-                          : Text(
-                              'Save',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                    )
-                  ],
+                FormActions(
+                  sendingRequest: sendingRequest,
+                  saveFunction: _saveTag,
                 )
               ],
             ),

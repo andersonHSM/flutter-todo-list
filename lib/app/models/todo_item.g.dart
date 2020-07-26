@@ -99,6 +99,21 @@ mixin _$TodoItem on _TodoItem, Store {
     });
   }
 
+  final _$tagIdAtom = Atom(name: '_TodoItem.tagId');
+
+  @override
+  String get tagId {
+    _$tagIdAtom.reportRead();
+    return super.tagId;
+  }
+
+  @override
+  set tagId(String value) {
+    _$tagIdAtom.reportWrite(value, super.tagId, () {
+      super.tagId = value;
+    });
+  }
+
   final _$_TodoItemActionController = ActionController(name: '_TodoItem');
 
   @override
@@ -131,7 +146,8 @@ title: ${title},
 description: ${description},
 updatedAt: ${updatedAt},
 filed: ${filed},
-finished: ${finished}
+finished: ${finished},
+tagId: ${tagId}
     ''';
   }
 }

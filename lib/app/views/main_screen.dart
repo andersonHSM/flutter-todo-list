@@ -4,8 +4,8 @@ import 'package:todo/app/models/fab_bottom_app_bar_item.dart';
 import 'package:todo/app/views/tags_screen.dart';
 import 'package:todo/app/views/todos_screen.dart';
 import 'package:todo/widgets/navigation/fab_bottom_app_bar.dart';
-import 'package:todo/widgets/tag_form_widget.dart';
-import 'package:todo/widgets/todo_form_widget.dart';
+import 'package:todo/widgets/tag/tag_form_widget.dart';
+import 'package:todo/widgets/todo/todo_form_widget.dart';
 
 enum FormsModals { TODO, TAG }
 
@@ -26,8 +26,7 @@ class _MainScreenState extends State<MainScreen> {
         switch (modal) {
           case FormsModals.TAG:
             return TagFormWidget();
-          // case FormsModals.TODO:
-          //   return TodoFormWidget();
+
           default:
             return TodoFormWidget();
         }

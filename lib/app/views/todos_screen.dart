@@ -5,9 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/todo_item.dart';
 import 'package:todo/repositories/todos_repository.dart';
-import 'package:todo/widgets/tag_form_widget.dart';
-import 'package:todo/widgets/todo_form_widget.dart';
-import 'package:todo/widgets/todo_list_widget.dart';
+import 'package:todo/widgets/tag/tag_form_widget.dart';
+import 'package:todo/widgets/todo/todo_form_widget.dart';
+import 'package:todo/widgets/todo/todo_list_widget.dart';
 
 class PopupItem {
   final IconData icon;

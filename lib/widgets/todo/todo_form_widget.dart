@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/todo_item.dart';
 import 'package:todo/repositories/todos_repository.dart';
+import 'package:todo/widgets/shared/form_actions.dart';
 
 class TodoFormWidget extends StatefulWidget {
   final TodoItem todo;
@@ -126,40 +127,9 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    RaisedButton(
-                      color: Theme.of(context).errorColor,
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 5),
-                    RaisedButton(
-                      color: Theme.of(context).accentColor,
-                      onPressed: _saveTodo,
-                      child: sendingRequest
-                          ? Container(
-                              width: 25,
-                              height: 25,
-                              child: CircularProgressIndicator(
-                                backgroundColor: Colors.white,
-                                strokeWidth: 3,
-                              ),
-                            )
-                          : Text(
-                              'Save',
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                    )
-                  ],
+                FormActions(
+                  saveFunction: _saveTodo,
+                  sendingRequest: sendingRequest,
                 )
               ],
             ),

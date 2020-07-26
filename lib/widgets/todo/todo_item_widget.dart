@@ -5,7 +5,7 @@ import 'package:todo/app/controllers/todos_controller.dart';
 
 import 'package:todo/app/models/todo_item.dart';
 import 'package:todo/repositories/todos_repository.dart';
-import 'package:todo/widgets/todo_form_widget.dart';
+import 'package:todo/widgets/todo/todo_form_widget.dart';
 
 class TodoItemWidget extends StatelessWidget {
   final TodoItem item;

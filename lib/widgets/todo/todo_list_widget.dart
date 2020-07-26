@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/todo_item.dart';
-import 'package:todo/widgets/todo_item_widget.dart';
+import 'package:todo/widgets/todo/todo_item_widget.dart';
 
 class TodosListWidget extends StatelessWidget {
   final List<TodoItem> items;

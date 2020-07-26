@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:todo/app/controllers/tags_controller.dart';
 import 'package:todo/app/models/tag.dart';
 import 'package:todo/repositories/tags_repository.dart';
-import 'package:todo/widgets/tag_form_widget.dart';
+import 'package:todo/widgets/tag/tag_form_widget.dart';
 
 class TagsListWidget extends StatelessWidget {
   final List<Tag> tags;

@@ -6,7 +6,7 @@ import 'package:todo/app/controllers/tags_controller.dart';
 
 import 'package:todo/app/models/tag.dart';
 import 'package:todo/repositories/tags_repository.dart';
-import 'package:todo/widgets/tags_list_widget.dart';
+import 'package:todo/widgets/tag/tags_list_widget.dart';
 
 class TagsScreen extends StatefulWidget {
   @override
