@@ -7,7 +7,6 @@ import 'package:todo/app/models/todo_item.dart';
 import 'package:todo/repositories/todos_repository.dart';
 import 'package:todo/widgets/todo_form_widget.dart';
 import 'package:todo/widgets/todo_list_widget.dart';
-import 'package:uuid/uuid.dart';
 
 class PopupItem {
   final IconData icon;
@@ -37,11 +36,6 @@ class _TodosScreenState extends State<TodosScreen> {
       icon: Icons.archive,
       text: 'Arquivados',
       value: 'filed',
-    ),
-    PopupItem(
-      icon: Icons.save,
-      text: 'Finalizados',
-      value: 'finished',
     ),
   ];
 
@@ -84,8 +78,6 @@ class _TodosScreenState extends State<TodosScreen> {
         return todosController.unfiledTodos;
       case 'filed':
         return todosController.filedTodos;
-      case 'finished':
-        return todosController.finishedTodos;
       default:
         return todosController.todos;
     }
@@ -94,6 +86,7 @@ class _TodosScreenState extends State<TodosScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: GlobalKey(),
       appBar: AppBar(
         title: Text('ToDo List'),
         actions: <Widget>[
@@ -114,13 +107,13 @@ class _TodosScreenState extends State<TodosScreen> {
         onRefresh: _fetchTodos,
         child: Observer(
           builder: (context) {
-            ObservableList<TodoItem> todos = _selectTodosToShow(_popupValue);
-            print(todos);
+            List<TodoItem> todos = _selectTodosToShow(_popupValue).toList();
             if (todos.length == 0) {
               return Center(
                 child: (Text('No ToDos found.')),
               );
             }
+
             return Padding(
               padding: const EdgeInsets.only(bottom: 75),
               child: TodosListWidget(

@@ -19,8 +19,10 @@ abstract class _TodosController with Store {
       todos.where((todo) => todo.filed).toList().asObservable();
 
   @computed
-  ObservableList<TodoItem> get finishedTodos =>
-      todos.where((todo) => todo.finished).toList().asObservable();
+  ObservableList<TodoItem> get finishedTodos => todos
+      .where((todo) => todo.finished && (todo.filed || !todo.filed))
+      .toList()
+      .asObservable();
 
   @computed
   ObservableList<TodoItem> get unfinishedTodos =>

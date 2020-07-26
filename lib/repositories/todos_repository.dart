@@ -11,7 +11,7 @@ class TodosRepository {
   static Future<TodoItem> saveTodo(TodoItem todo) async {
     final response = await dio.post<Map<String, dynamic>>("$todosUrl.json",
         data: json.encode(todo.toJson()));
-    // print(response.data);
+
     TodoItem savedTodo = todo;
     savedTodo.id = response.data['name'];
 
@@ -31,10 +31,8 @@ class TodosRepository {
     return items;
   }
 
-  static Future<TodoItem> updateTodo(TodoItem todo) async {
-    final response = await dio.put("$todosUrl/${todo.id}.json",
+  static Future<void> updateTodo(TodoItem todo) async {
+    await dio.put("$todosUrl/${todo.id}.json",
         data: json.encode(todo.toJson()));
-
-    print(response);
   }
 }

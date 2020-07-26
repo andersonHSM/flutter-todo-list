@@ -1,15 +1,26 @@
 import 'package:flutter/foundation.dart';
+import 'package:mobx/mobx.dart';
 
-class TodoItem with ChangeNotifier {
+part 'todo_item.g.dart';
+
+class TodoItem = _TodoItem with _$TodoItem;
+
+abstract class _TodoItem with Store {
+  @observable
   String id;
-  final String title;
-  final String description;
+  @observable
+  String title;
+  @observable
+  String description;
   final DateTime createdAt;
+  @observable
   DateTime updatedAt;
+  @observable
   bool filed;
+  @observable
   bool finished;
 
-  TodoItem({
+  _TodoItem({
     @required this.title,
     this.id,
     this.description,
@@ -19,7 +30,7 @@ class TodoItem with ChangeNotifier {
     this.updatedAt,
   });
 
-  TodoItem.fromJson(Map<String, dynamic> json)
+  _TodoItem.fromJson(Map<String, dynamic> json)
       : title = json['title'],
         description = json['description'],
         finished = json['finished'],
@@ -27,14 +38,14 @@ class TodoItem with ChangeNotifier {
         createdAt = DateTime.parse(json['createdAt']),
         updatedAt = DateTime.parse(json['updatedAt']);
 
+  @action
   void updateFiledState(bool isFiled) {
     this.filed = isFiled;
-    notifyListeners();
   }
 
+  @action
   void toggleFinishedState() {
     this.finished = !this.finished;
-    notifyListeners();
   }
 
   Map<String, dynamic> toJson() {

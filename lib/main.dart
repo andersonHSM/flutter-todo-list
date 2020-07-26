@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      create: (context) => TodosController(),
+      create: (_) => TodosController(),
       child: MaterialApp(
         title: 'CoBlue ToDo List',
         theme: ThemeData(
