@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
+import 'package:todo/app/models/tag.dart';
 import 'package:todo/app/models/todo_item.dart';
 import 'package:todo/repositories/todos_repository.dart';
 
 class TodoItemActions extends StatelessWidget {
   final TodosController todosController;
   final TodoItem todoItem;
+  final Tag tag;
   final Function showEditDialog;
 
   TodoItemActions({
     @required this.todosController,
+    this.tag,
     @required this.todoItem,
     @required this.showEditDialog,
   });
@@ -19,6 +22,12 @@ class TodoItemActions extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
+        if (tag != null)
+          Chip(
+            labelStyle: TextStyle(color: Colors.white),
+            backgroundColor: Theme.of(context).accentColor,
+            label: Text(tag.title),
+          ),
         Tooltip(
           message: 'Remove ToDo',
           child: IconButton(

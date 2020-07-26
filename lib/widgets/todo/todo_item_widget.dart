@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:todo/app/controllers/tags_controller.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
+import 'package:todo/app/models/tag.dart';
 
 import 'package:todo/app/models/todo_item.dart';
 import 'package:todo/repositories/todos_repository.dart';
@@ -85,10 +87,24 @@ class TodoItemWidget extends StatelessWidget {
     );
   }
 
+  Tag _selectTodoTag(TagsController tagsController, TodoItem todo) {
+    List<Tag> tags = tagsController.tags
+        .toList()
+        .where((tag) => tag.id == todo.tagId)
+        .toList();
+
+    if (tags.length > 0) {
+      return tags.elementAt(0);
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final todosController =
-        Provider.of<TodosController>(context, listen: false);
+    final TodosController todosController = Provider.of(context, listen: false);
+    final TagsController tagsController = Provider.of(context, listen: false);
+
+    Tag todoTag = _selectTodoTag(tagsController, this.item);
 
     return Observer(
       builder: (_) => Dismissible(
@@ -137,6 +153,7 @@ class TodoItemWidget extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TodoItemActions(
+                    tag: todoTag,
                     todoItem: this.item,
                     todosController: todosController,
                     showEditDialog: () => _showEditModal(context),
