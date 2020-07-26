@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo/app/controllers/todos_controller.dart';
-import 'package:todo/app/models/todo_item.dart';
-import 'package:todo/repositories/todos_repository.dart';
 
-class TodoFormWidget extends StatefulWidget {
-  final TodoItem todo;
+import 'package:todo/app/controllers/tags_controller.dart';
+import 'package:todo/app/models/tag.dart';
+import 'package:todo/repositories/tags_repository.dart';
 
-  TodoFormWidget({this.todo});
+class TagFormWidget extends StatefulWidget {
+  final Tag tag;
+
+  TagFormWidget({this.tag});
 
   @override
-  _TodoFormWidgetState createState() => _TodoFormWidgetState();
+  _TagFormWidgetState createState() => _TagFormWidgetState();
 }
 
-class _TodoFormWidgetState extends State<TodoFormWidget> {
-  TodosController todosController;
+class _TagFormWidgetState extends State<TagFormWidget> {
+  TagsController tagsController;
+  TagsRepository tagsRepository;
+
   bool sendingRequest = false;
   final _form = GlobalKey<FormState>();
   final _descriptionFocusNode = FocusNode();
@@ -24,12 +27,14 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
   @override
   void initState() {
     super.initState();
-    todosController = Provider.of<TodosController>(context, listen: false);
-    _formData['title'] = widget.todo?.title;
-    _formData['description'] = widget.todo?.description;
+    tagsController = Provider.of<TagsController>(context, listen: false);
+    tagsRepository = TagsRepository();
+
+    _formData['title'] = widget.tag?.title;
+    _formData['description'] = widget.tag?.description;
   }
 
-  Future<void> _saveTodo() async {
+  Future<void> _saveTag() async {
     final formState = _form.currentState;
     final isFormValid = formState.validate();
 
@@ -44,32 +49,35 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
     });
 
     try {
-      TodoItem todo;
-      TodoItem todoResponse;
+      Tag tag;
+      Tag tagResponse;
 
-      if (widget.todo == null) {
-        todo = TodoItem(
+      if (widget.tag == null) {
+        tag = Tag(
           title: _formData['title'],
           description: _formData['description'],
           createdAt: saveTime,
           updatedAt: saveTime,
         );
-        todoResponse = await TodosRepository.saveTodo(todo);
-        todosController.addTodo(todoResponse);
+
+        tagResponse = await tagsRepository.saveTag(tag);
+        tagsController.addTag(tagResponse);
       } else {
-        todo = widget.todo;
+        tag = widget.tag;
 
-        todo.updatedAt = saveTime;
-        todo.title = _formData['title'];
-        todo.description = _formData['description'];
+        tag.updatedAt = saveTime;
+        tag.title = _formData['title'];
+        tag.description = _formData['description'];
 
-        await TodosRepository.updateTodo(todo);
+        await tagsRepository.updateTag(tag);
 
-        todosController.updateTodo(todo);
+        tagsController.updateTag(tag);
       }
 
       Navigator.of(context).pop();
-    } catch (e) {} finally {
+    } catch (e) {
+      print(e);
+    } finally {
       setState(() {
         sendingRequest = false;
       });
@@ -89,10 +97,10 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
               children: <Widget>[
                 TextFormField(
                   onEditingComplete: () => _descriptionFocusNode.requestFocus(),
-                  initialValue: widget.todo?.title ?? '',
+                  initialValue: widget.tag?.title ?? '',
                   onSaved: (value) => _formData['title'] = value,
                   decoration: InputDecoration(
-                    labelText: 'ToDo Title',
+                    labelText: 'Tag Title',
                     alignLabelWithHint: true,
                   ),
                   validator: (value) {
@@ -105,12 +113,12 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
                 TextFormField(
                   focusNode: _descriptionFocusNode,
                   onFieldSubmitted: (value) {
-                    _saveTodo();
+                    _saveTag();
                   },
-                  initialValue: widget.todo?.description ?? '',
+                  initialValue: widget.tag?.description ?? '',
                   onSaved: (value) => _formData['description'] = value,
                   decoration: InputDecoration(
-                    labelText: 'ToDo Description',
+                    labelText: 'Tag Description',
                     alignLabelWithHint: true,
                   ),
                 ),
@@ -131,7 +139,7 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
                     SizedBox(width: 5),
                     RaisedButton(
                       color: Theme.of(context).accentColor,
-                      onPressed: _saveTodo,
+                      onPressed: _saveTag,
                       child: sendingRequest
                           ? Container(
                               width: 25,

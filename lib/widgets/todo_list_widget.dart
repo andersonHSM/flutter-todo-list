@@ -16,15 +16,10 @@ class TodosListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TodosController todosController = Provider.of(context);
-    final ScrollController _controller = ScrollController();
 
     final Widget emptyTodosMessage = Center(
       child: (Text('No ToDos found.')),
     );
-
-    // if (items.length == 0) {
-    //   return emptyTodosMessage;
-    // }
 
     return RefreshIndicator(
       onRefresh: fetchTodos,
