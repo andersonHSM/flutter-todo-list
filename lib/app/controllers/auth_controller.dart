@@ -84,6 +84,7 @@ abstract class _AuthController with Store {
 
       return Future.value();
     } on DioError catch (e) {
+      print(e.response);
       throw AuthException(e.response.data['error']['message']);
     }
   }

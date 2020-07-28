@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:todo/app/controllers/tags_controller.dart';
 import 'package:todo/app/models/tag.dart';
 import 'package:todo/repositories/tags_repository.dart';
+import 'package:todo/utils/form_validations.dart';
 import 'package:todo/widgets/shared/form_actions.dart';
 
 class TagFormWidget extends StatefulWidget {
@@ -30,10 +31,9 @@ class _TagFormWidgetState extends State<TagFormWidget> {
   void initState() {
     super.initState();
     tagsController = Provider.of<TagsController>(context, listen: false);
-    tagsRepository = TagsRepository();
+    tagsRepository = Provider.of<TagsRepository>(context, listen: false);
 
     _formData['title'] = widget.tag?.title;
-    _formData['description'] = widget.tag?.description;
   }
 
   Future<void> _saveTag() async {
@@ -57,7 +57,6 @@ class _TagFormWidgetState extends State<TagFormWidget> {
       if (widget.tag == null) {
         tag = Tag(
           title: _formData['title'],
-          description: _formData['description'],
           createdAt: saveTime,
           updatedAt: saveTime,
         );
@@ -69,14 +68,12 @@ class _TagFormWidgetState extends State<TagFormWidget> {
         tag = Tag(
           title: widgetTag.title,
           createdAt: widgetTag.createdAt,
-          description: widgetTag.description,
           id: widgetTag.id,
           updatedAt: widgetTag.updatedAt,
         );
 
         tag.updatedAt = saveTime;
         tag.title = _formData['title'];
-        tag.description = _formData['description'];
 
         await tagsRepository.updateTag(tag);
         tagsController.updateTag(tag, widget.index);
@@ -110,23 +107,8 @@ class _TagFormWidgetState extends State<TagFormWidget> {
                     alignLabelWithHint: true,
                   ),
                   validator: (value) {
-                    if (value.trim().isEmpty) {
-                      return 'Required field';
-                    }
-                    return null;
+                    return FormValidators.requiredFieldValidator(value);
                   },
-                ),
-                TextFormField(
-                  focusNode: _descriptionFocusNode,
-                  onFieldSubmitted: (value) {
-                    _saveTag();
-                  },
-                  initialValue: widget.tag?.description ?? '',
-                  onSaved: (value) => _formData['description'] = value,
-                  decoration: InputDecoration(
-                    labelText: 'Tag Description',
-                    alignLabelWithHint: true,
-                  ),
                 ),
                 SizedBox(height: 20),
                 FormActions(

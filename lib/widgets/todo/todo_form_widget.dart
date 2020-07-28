@@ -19,6 +19,7 @@ class TodoFormWidget extends StatefulWidget {
 class _TodoFormWidgetState extends State<TodoFormWidget> {
   TodosController todosController;
   TagsController tagsController;
+  TodosRepository todosRepository;
 
   bool sendingRequest = false;
   int _tagIndex = 0;
@@ -33,6 +34,7 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
     super.initState();
     todosController = Provider.of<TodosController>(context, listen: false);
     tagsController = Provider.of<TagsController>(context, listen: false);
+    todosRepository = Provider.of<TodosRepository>(context, listen: false);
 
     _initForm();
   }
@@ -82,7 +84,7 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
             createdAt: saveTime,
             updatedAt: saveTime,
             tagId: _formData['tagId']);
-        todoResponse = await TodosRepository.saveTodo(todo);
+        todoResponse = await todosRepository.saveTodo(todo);
         todosController.addTodo(todoResponse);
       } else {
         final widgetTodo = widget.todo;
@@ -102,7 +104,7 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
         todo.description = _formData['description'];
         todo.tagId = _formData['tagId'];
 
-        await TodosRepository.updateTodo(todo);
+        await todosRepository.updateTodo(todo);
 
         int previousTodoIndex = todosController.todos.indexOf(widgetTodo);
 
@@ -156,13 +158,14 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Container(
-                  child: TagChooseList(
-                    tags: tagsController.tags.toList(),
-                    initialIndex: _tagIndex,
-                    handleSelect: (id) => _handleTagSelect(id),
+                if (tagsController.tags.toList().length > 0)
+                  Container(
+                    child: TagChooseList(
+                      tags: tagsController.tags.toList(),
+                      initialIndex: _tagIndex,
+                      handleSelect: (id) => _handleTagSelect(id),
+                    ),
                   ),
-                ),
                 FormActions(
                   saveFunction: _saveTodo,
                   sendingRequest: sendingRequest,

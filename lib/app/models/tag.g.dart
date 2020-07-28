@@ -39,21 +39,6 @@ mixin _$Tag on _Tag, Store {
     });
   }
 
-  final _$descriptionAtom = Atom(name: '_Tag.description');
-
-  @override
-  String get description {
-    _$descriptionAtom.reportRead();
-    return super.description;
-  }
-
-  @override
-  set description(String value) {
-    _$descriptionAtom.reportWrite(value, super.description, () {
-      super.description = value;
-    });
-  }
-
   final _$updatedAtAtom = Atom(name: '_Tag.updatedAt');
 
   @override
@@ -74,7 +59,6 @@ mixin _$Tag on _Tag, Store {
     return '''
 id: ${id},
 title: ${title},
-description: ${description},
 updatedAt: ${updatedAt}
     ''';
   }

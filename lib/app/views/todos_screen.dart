@@ -28,6 +28,9 @@ class TodosScreen extends StatefulWidget {
 class _TodosScreenState extends State<TodosScreen> {
   TodosController todosController;
   TagsController tagsController;
+  TodosRepository todosRepository;
+  TagsRepository tagsRepository;
+
   Tag _filterTag;
 
   String _popupValue = 'all';
@@ -68,18 +71,20 @@ class _TodosScreenState extends State<TodosScreen> {
     super.initState();
     this.todosController = Provider.of<TodosController>(context, listen: false);
     this.tagsController = Provider.of<TagsController>(context, listen: false);
+    this.todosRepository = Provider.of<TodosRepository>(context, listen: false);
+    this.tagsRepository = Provider.of<TagsRepository>(context, listen: false);
 
     _loadData();
   }
 
   Future<void> _fetchTodos() async {
-    final todos = await TodosRepository.fetchTodos();
+    final todos = await todosRepository.fetchTodos();
 
     todosController.setTodos(todos);
   }
 
   Future<void> _fetchTags() async {
-    final tags = await TagsRepository().fetchTags();
+    final tags = await tagsRepository.fetchTags();
 
     tagsController.setTags(tags);
   }

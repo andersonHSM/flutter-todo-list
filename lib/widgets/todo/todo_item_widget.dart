@@ -51,17 +51,19 @@ class TodoItemWidget extends StatelessWidget {
     }
   }
 
-  Future<void> _dismissItem(TodoItem todo) async {
+  Future<void> _dismissItem(
+      TodoItem todo, TodosRepository todosRepository) async {
     try {
       todo.toggleFiledState();
 
-      await TodosRepository.updateTodo(todo);
+      await todosRepository.updateTodo(todo);
     } catch (e) {
       todo.toggleFiledState();
     }
   }
 
-  Future<void> _markAsFinished(TodoItem todo) async {
+  Future<void> _markAsFinished(
+      TodoItem todo, TodosRepository todosRepository) async {
     try {
       todo.updatedAt = DateTime.now();
 
@@ -69,7 +71,7 @@ class TodoItemWidget extends StatelessWidget {
 
       updateTodo(todo);
 
-      await TodosRepository.updateTodo(todo);
+      await todosRepository.updateTodo(todo);
     } catch (e) {
       todo.toggleFinishedState();
     }
@@ -103,6 +105,7 @@ class TodoItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final TodosController todosController = Provider.of(context, listen: false);
     final TagsController tagsController = Provider.of(context, listen: false);
+    final TodosRepository todosRepository = Provider.of(context, listen: false);
 
     Tag todoTag = _selectTodoTag(tagsController, this.item);
 
@@ -124,7 +127,7 @@ class TodoItemWidget extends StatelessWidget {
         ),
         direction: DismissDirection.endToStart,
         onDismissed: (_) async {
-          await _dismissItem(item);
+          await _dismissItem(item, todosRepository);
         },
         confirmDismiss: (direction) async {
           return await _confirmDismiss(context, direction);
@@ -146,13 +149,14 @@ class TodoItemWidget extends StatelessWidget {
                   subtitle: Text(this.item.description),
                   value: item.finished,
                   onChanged: (_) async {
-                    await _markAsFinished(this.item);
+                    await _markAsFinished(this.item, todosRepository);
                   },
                 ),
                 Divider(),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TodoItemActions(
+                    todosRepository: todosRepository,
                     tag: todoTag,
                     todoItem: this.item,
                     todosController: todosController,

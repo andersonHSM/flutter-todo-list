@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:todo/app/models/todo_item.dart';
 import 'package:todo/utils/app_urls.dart';
 
@@ -8,8 +9,14 @@ class TodosRepository {
   static final String todosUrl = "${AppUrls.baseUrl}/todos";
   static Dio dio = Dio();
 
-  static Future<TodoItem> saveTodo(TodoItem todo) async {
-    final response = await dio.post<Map<String, dynamic>>("$todosUrl.json",
+  final String token;
+  final String userId;
+
+  TodosRepository({@required this.token, @required this.userId});
+
+  Future<TodoItem> saveTodo(TodoItem todo) async {
+    final response = await dio.post<Map<String, dynamic>>(
+        "${AppUrls.baseUrl}/$userId/todos.json?auth=$token",
         data: json.encode(todo.toJson()));
 
     TodoItem savedTodo = todo;
@@ -18,25 +25,30 @@ class TodosRepository {
     return savedTodo;
   }
 
-  static Future<List<TodoItem>> fetchTodos() async {
-    final response = await dio.get<Map<String, dynamic>>("$todosUrl.json");
+  Future<List<TodoItem>> fetchTodos() async {
+    final response = await dio.get<Map<String, dynamic>>(
+        "${AppUrls.baseUrl}/$userId/todos.json?auth=$token");
 
     List<TodoItem> items = [];
-    response.data.forEach((key, value) {
-      TodoItem todo = TodoItem.fromJson(value);
-      todo.id = key;
-      items.add(todo);
-    });
+    if (response.data != null) {
+      response.data.forEach((key, value) {
+        TodoItem todo = TodoItem.fromJson(value);
+        todo.id = key;
+        items.add(todo);
+      });
+    }
 
     return items;
   }
 
-  static Future<void> updateTodo(TodoItem todo) async {
-    await dio.put("$todosUrl/${todo.id}.json",
+  Future<void> updateTodo(TodoItem todo) async {
+    await dio.put(
+        "${AppUrls.baseUrl}/$userId/todos/${todo.id}.json?auth=$token",
         data: json.encode(todo.toJson()));
   }
 
-  static Future<void> deleteTodo(TodoItem todo) async {
-    await dio.delete("$todosUrl/${todo.id}.json");
+  Future<void> deleteTodo(TodoItem todo) async {
+    await dio
+        .delete("${AppUrls.baseUrl}/$userId/todos/${todo.id}.json?auth=$token");
   }
 }

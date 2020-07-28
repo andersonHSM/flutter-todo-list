@@ -13,4 +13,11 @@ class FormValidators {
     }
     return null;
   }
+
+  static String weakPasswordValidator(String value) {
+    if (value.trim().length < 6) {
+      return 'Password must be at leat 6 characacters';
+    }
+    return null;
+  }
 }

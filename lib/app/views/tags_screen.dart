@@ -21,7 +21,7 @@ class _TagsScreenState extends State<TagsScreen> {
   void initState() {
     super.initState();
     tagsController = Provider.of<TagsController>(context, listen: false);
-    tagsRepository = TagsRepository();
+    tagsRepository = Provider.of<TagsRepository>(context, listen: false);
 
     _fetchTags();
   }

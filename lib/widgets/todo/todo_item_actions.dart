@@ -6,11 +6,13 @@ import 'package:todo/repositories/todos_repository.dart';
 
 class TodoItemActions extends StatelessWidget {
   final TodosController todosController;
+  final TodosRepository todosRepository;
   final TodoItem todoItem;
   final Tag tag;
   final Function showEditDialog;
 
   TodoItemActions({
+    @required this.todosRepository,
     @required this.todosController,
     this.tag,
     @required this.todoItem,
@@ -50,7 +52,7 @@ class TodoItemActions extends StatelessWidget {
               if (confirmation != null && confirmation == true) {
                 try {
                   todosController.removeTodo(todoItem);
-                  await TodosRepository.deleteTodo(todoItem);
+                  await todosRepository.deleteTodo(todoItem);
                 } catch (e) {
                   todosController.addTodo(todoItem, todoIndex);
                 }

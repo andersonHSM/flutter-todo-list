@@ -4,6 +4,8 @@ import 'package:todo/app/controllers/auth_controller.dart';
 import 'package:todo/app/controllers/tags_controller.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/views/auth_or_home_screen.dart';
+import 'package:todo/repositories/tags_repository.dart';
+import 'package:todo/repositories/todos_repository.dart';
 
 import 'package:todo/utils/app_routes.dart';
 
@@ -24,6 +26,18 @@ class MyApp extends StatelessWidget {
         ),
         Provider<AuthController>(
           create: (_) => AuthController(),
+        ),
+        ProxyProvider<AuthController, TagsRepository>(
+          update: (_, authController, __) => TagsRepository(
+            token: authController.token,
+            userId: authController.userId,
+          ),
+        ),
+        ProxyProvider<AuthController, TodosRepository>(
+          update: (_, authController, __) => TodosRepository(
+            token: authController.token,
+            userId: authController.userId,
+          ),
         )
       ],
       child: MaterialApp(
