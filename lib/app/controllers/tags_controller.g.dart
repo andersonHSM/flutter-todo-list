@@ -39,6 +39,17 @@ mixin _$TagsController on _TagsController, Store {
   }
 
   @override
+  void clearTags() {
+    final _$actionInfo = _$_TagsControllerActionController.startAction(
+        name: '_TagsController.clearTags');
+    try {
+      return super.clearTags();
+    } finally {
+      _$_TagsControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void updateTag(Tag tag, int index) {
     final _$actionInfo = _$_TagsControllerActionController.startAction(
         name: '_TagsController.updateTag');

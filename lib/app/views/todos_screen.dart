@@ -168,6 +168,9 @@ class _TodosScreenState extends State<TodosScreen> {
                 onPressed: () {
                   AuthController authController =
                       Provider.of(context, listen: false);
+
+                  tagsController.clearTags();
+                  todosController.clearTodos();
                   authController.logout();
                 })
           ],

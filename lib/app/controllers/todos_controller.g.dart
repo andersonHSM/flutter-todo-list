@@ -68,6 +68,17 @@ mixin _$TodosController on _TodosController, Store {
   }
 
   @override
+  void clearTodos() {
+    final _$actionInfo = _$_TodosControllerActionController.startAction(
+        name: '_TodosController.clearTodos');
+    try {
+      return super.clearTodos();
+    } finally {
+      _$_TodosControllerActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void addTodo(TodoItem todo, [int index]) {
     final _$actionInfo = _$_TodosControllerActionController.startAction(
         name: '_TodosController.addTodo');

@@ -38,7 +38,6 @@ class TodosListWidget extends StatelessWidget {
 
                   int previousIndex = todosController.todos.indexOf(item);
 
-                  // TODO - alterar a lógica de filtragem para dentro desse widget
                   return TodoItemWidget(
                     item: item,
                     updateTodo: (todo) {

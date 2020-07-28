@@ -15,6 +15,11 @@ abstract class _TagsController with Store {
   }
 
   @action
+  void clearTags() {
+    this.tags.clear();
+  }
+
+  @action
   void updateTag(Tag tag, int index) {
     tags[index] = tag;
   }

@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/app/controllers/auth_controller.dart';
 import 'package:todo/app/controllers/tags_controller.dart';
+import 'package:todo/app/controllers/todos_controller.dart';
 
 import 'package:todo/app/models/tag.dart';
 import 'package:todo/repositories/tags_repository.dart';
@@ -16,6 +17,7 @@ class TagsScreen extends StatefulWidget {
 class _TagsScreenState extends State<TagsScreen> {
   TagsController tagsController;
   TagsRepository tagsRepository;
+  TodosController todosController;
   bool _loading = true;
 
   @override
@@ -23,6 +25,7 @@ class _TagsScreenState extends State<TagsScreen> {
     super.initState();
     tagsController = Provider.of<TagsController>(context, listen: false);
     tagsRepository = Provider.of<TagsRepository>(context, listen: false);
+    todosController = Provider.of<TodosController>(context, listen: false);
 
     _fetchTags();
   }
@@ -47,6 +50,9 @@ class _TagsScreenState extends State<TagsScreen> {
               onPressed: () {
                 AuthController authController =
                     Provider.of(context, listen: false);
+
+                tagsController.clearTags();
+                todosController.clearTodos();
                 authController.logout();
               })
         ],
