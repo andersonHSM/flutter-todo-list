@@ -31,6 +31,8 @@ class _TodosScreenState extends State<TodosScreen> {
   TodosRepository todosRepository;
   TagsRepository tagsRepository;
 
+  bool _loading = true;
+
   Tag _filterTag;
 
   String _popupValue = 'all';
@@ -91,6 +93,9 @@ class _TodosScreenState extends State<TodosScreen> {
 
   Future<void> _loadData() async {
     await Future.wait([_fetchTags(), _fetchTodos()]);
+    setState(() {
+      _loading = false;
+    });
   }
 
   ObservableList<TodoItem> _selectTodosToShow(String value) {
@@ -180,6 +185,10 @@ class _TodosScreenState extends State<TodosScreen> {
               todaysTodos = todaysTodos
                   .where((todo) => todo.tagId == _filterTag.id)
                   .toList();
+            }
+
+            if (_loading && todos.length == 0) {
+              return Center(child: CircularProgressIndicator());
             }
 
             return Padding(

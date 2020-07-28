@@ -16,6 +16,7 @@ class TagsScreen extends StatefulWidget {
 class _TagsScreenState extends State<TagsScreen> {
   TagsController tagsController;
   TagsRepository tagsRepository;
+  bool _loading = true;
 
   @override
   void initState() {
@@ -30,6 +31,9 @@ class _TagsScreenState extends State<TagsScreen> {
     final tags = await tagsRepository.fetchTags();
 
     tagsController.setTags(tags);
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
@@ -50,6 +54,10 @@ class _TagsScreenState extends State<TagsScreen> {
       body: Observer(
         builder: (_) {
           List<Tag> tags = tagsController.tags.toList();
+
+          if (_loading && tags.length == 0) {
+            return Center(child: CircularProgressIndicator());
+          }
 
           return TagsListWidget(
             tags: tags,
