@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo/app/controllers/auth_controller.dart';
 import 'package:todo/app/controllers/tags_controller.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
-import 'package:todo/app/views/main_screen.dart';
+import 'package:todo/app/views/auth_or_home_screen.dart';
+
 import 'package:todo/utils/app_routes.dart';
 
 void main() {
@@ -19,6 +21,9 @@ class MyApp extends StatelessWidget {
         ),
         Provider<TagsController>(
           create: (_) => TagsController(),
+        ),
+        Provider<AuthController>(
+          create: (_) => AuthController(),
         )
       ],
       child: MaterialApp(
@@ -30,7 +35,7 @@ class MyApp extends StatelessWidget {
         ),
         // home: MyHomePage(title: 'ToDo List'),
         routes: {
-          AppRoutes.HOME: (_) => MainScreen(),
+          AppRoutes.HOME: (_) => AuthOrHomeScreen(),
         },
       ),
     );

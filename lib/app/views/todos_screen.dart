@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:todo/app/controllers/auth_controller.dart';
 import 'package:todo/app/controllers/tags_controller.dart';
 import 'package:todo/app/controllers/todos_controller.dart';
 import 'package:todo/app/models/tag.dart';
@@ -152,6 +153,13 @@ class _TodosScreenState extends State<TodosScreen> {
                 });
               },
             ),
+            IconButton(
+                icon: Icon(Icons.power_settings_new),
+                onPressed: () {
+                  AuthController authController =
+                      Provider.of(context, listen: false);
+                  authController.logout();
+                })
           ],
         ),
         body: Observer(

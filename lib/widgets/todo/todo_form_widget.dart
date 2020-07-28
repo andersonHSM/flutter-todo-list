@@ -110,9 +110,7 @@ class _TodoFormWidgetState extends State<TodoFormWidget> {
       }
 
       Navigator.of(context).pop();
-    } catch (e) {
-      print(e);
-    } finally {
+    } catch (e) {} finally {
       setState(() {
         sendingRequest = false;
       });

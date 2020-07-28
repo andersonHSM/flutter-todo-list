@@ -83,9 +83,7 @@ class _TagFormWidgetState extends State<TagFormWidget> {
       }
 
       Navigator.of(context).pop();
-    } catch (e) {
-      print(e);
-    } finally {
+    } catch (e) {} finally {
       setState(() {
         sendingRequest = false;
       });
