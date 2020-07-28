@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
-        title: 'CoBlue ToDo List',
+        title: 'ToDo List',
         theme: ThemeData(
           primaryColor: Colors.blueGrey[900],
           accentColor: Colors.deepPurple[700],
